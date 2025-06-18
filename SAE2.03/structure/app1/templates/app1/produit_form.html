@@ -1,0 +1,41 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}{{ title }} un produit{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/formulaire.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="edit-wrapper">
+    <a href="{{ retour_url|default:'/' }}" class="btn-retour">Retour</a>
+    <div class="edit-title">
+      <span>{{ title }} un produit</span>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" autocomplete="off">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" name="submit_manuel" class="btn-publier">{{ submit_label }}</button>
+    </form>
+    
+    {% if not is_update %}
+      <div style="margin:2em 0;"><hr></div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="fichier" accept=".csv" required>
+        <button type="submit" name="submit_csv" class="btn-publier">Importer des produits</button>
+      </form>
+      {% if import_message %}
+        <div class="message">{{ import_message|safe }}</div>
+      {% endif %}
+      <b>Format du CSV&nbsp;:</b>
+      <pre>
+nom,date_peremption,marque,prix,categorie
+Pomme,2025-06-10,none,2.10,fruits
+Tablette de chocolat,2025-06-12,Milka,2.50,chocolat
+      </pre>
+    {% endif %}
+  </div>
+{% endblock %}

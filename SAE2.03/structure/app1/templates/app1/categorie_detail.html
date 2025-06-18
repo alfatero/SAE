@@ -1,0 +1,58 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}{{ categorie.nom }}{% endblock %}
+{% block meta_keywords %}catégorie, {{ categorie.nom }}, produits, SAE 2.03{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/categorie_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="hero-banner" style="background-image: url('{{ categorie.image.url }}');">
+    <div class="hero-banner-actions">
+      <a href="{% url 'categorie-grid' %}" class="banner-btn">
+        <i class="fa fa-arrow-left"></i> Retour
+      </a>
+      <a href="{% url 'panier' %}" class="banner-btn" title="Voir le panier">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+      <a href="{% url 'produit-manage' %}?categorie={{ categorie.id }}" class="banner-btn">
+        Gérer les produits
+      </a>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="main-title"><span>{{ categorie.nom|upper }} :</span></div>
+    <form class="search-bar" method="get" autocomplete="off">
+      <input type="text" name="q" placeholder="Chercher un produit…" value="{{ request.GET.q|default:'' }}">
+    </form>
+    <div class="cards-grid">
+      {% for produit in produits %}
+        <div class="card">
+          <img class="card-img"
+               src="{% if produit.photo %}{{ produit.photo.url }}{% else %}{% static 'app1/img/default_product.jpg' %}{% endif %}"
+               alt="{{ produit.nom }}" />
+          <div class="card-content">
+            <span class="card-title">{{ produit.nom }}</span>
+            {% if produit.marque %}
+              <span class="card-marque">Marque&nbsp;: {{ produit.marque }}</span>
+            {% else %}
+              <span class="card-marque">Marque&nbsp;: <span style="color:#bbb;font-style:italic;">Non précisée</span></span>
+            {% endif %}
+            <span class="card-date">Périme le {{ produit.date_peremption }}</span>
+            <span class="card-price-label">{{ produit.prix }} €</span>
+          </div>
+          <div class="card-action">
+            <form method="post" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="produit_id" value="{{ produit.id }}">
+              <button type="submit" class="card-btn-ajouter">Ajouter</button>
+            </form>
+          </div>
+        </div>
+      {% empty %}
+        <p style="color:#888;">Aucun produit dans cette catégorie.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

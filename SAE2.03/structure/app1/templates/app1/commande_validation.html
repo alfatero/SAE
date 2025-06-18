@@ -1,0 +1,45 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Valider ma commande{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/validation.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="recap-wrapper">
+    <div class="recap-title">Récapitulatif de la commande</div>
+    {% if message %}
+      <div class="recap-message">{{ message }}</div>
+    {% endif %}
+    <ul class="recap-list">
+      {% for item in panier_items %}
+      <li class="recap-item">
+        <img src="{% if item.produit.photo %}{{ item.produit.photo.url }}{% else %}{% static 'app1/img/default.jpg' %}{% endif %}" class="recap-img" alt="{{ item.produit.nom }}">
+        <div class="recap-info">
+          <div class="recap-nom">{{ item.produit.nom }}</div>
+          <div>
+            <span class="recap-qt">x{{ item.quantite }}</span>
+            <span class="recap-euro">{{ item.total|floatformat:2 }} €</span>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="recap-total">
+      Total commande : <span>{{ total_panier|floatformat:2 }} €</span>
+    </div>
+    <form method="post" class="recap-form">
+      {% csrf_token %}
+      <label for="client_id" class="recap-label">Sélectionner un compte client :</label>
+      <select name="client_id" id="client_id" class="recap-select" required>
+        <option value="">-- Sélectionner --</option>
+        {% for client in clients %}
+          <option value="{{ client.pk }}">{{ client.prenom }} {{ client.nom }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="valider-btn">Confirmer la commande</button>
+    </form>
+  </div>
+{% endblock %}

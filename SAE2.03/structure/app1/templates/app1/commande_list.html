@@ -1,0 +1,59 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+{% block title %}Commandes passées{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/commandes.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  {# Ajoute ton panier.css si tu veux forcer exactement le même style responsive que la page panier #}
+  <link rel="stylesheet" href="{% static 'app1/panier.css' %}">
+{% endblock %}
+{% block content %}
+  <div class="panier-banner" style="margin-bottom:30px;">
+    <a href="{% url 'categorie-grid' %}" class="banner-btn retour-btn">
+      &#8592; Retour
+    </a>
+    <span class="panier-title">Liste des commandes</span>
+    <span></span>
+  </div>
+  <div class="recap-wrapper" style="max-width:820px;">
+    {% if commandes %}
+      <table class="commandes-table">
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Total</th>
+            <th>Détails</th>
+            <th>Supprimer</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+          <tr>
+            <td>#{{ commande.numero_commande }}</td>
+            <td>{{ commande.date|date:"d/m/Y H:i" }}</td>
+            <td>{{ commande.client.prenom }} {{ commande.client.nom }}</td>
+            <td><b>{{ commande.cout_total|floatformat:2 }} €</b></td>
+            <td>
+              <a href="{% url 'commande-confirmation' commande.pk %}" class="btn-action voir-btn" title="Afficher la commande">
+                <i class="fa-solid fa-eye"></i> Voir
+              </a>
+            </td>
+            <td>
+              <form action="{% url 'commande-delete' commande.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-action supprimer-btn" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-panier">Aucune commande pour le moment.</div>
+    {% endif %}
+  </div>
+{% endblock %}

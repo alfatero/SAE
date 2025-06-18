@@ -1,0 +1,55 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Gérer les Produits{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/clients.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+  <a href="#" onclick="window.history.back(); return false;" class="btn-retour">
+    <i class="fa fa-arrow-left"></i> Retour
+  </a>
+  <div class="categories-title">
+    <span class="title">Gérer les produits</span>
+  </div>
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'produit-create' %}" class="btn-ajouter">+ Ajouter un produit</a>
+  </div>
+  <form class="search-bar" method="get" autocomplete="off">
+    <input type="text" name="q" placeholder="Chercher un produit par nom ou marque..." value="{{ request.GET.q|default:'' }}">
+  </form>
+  <div class="category-table">
+    {% for produit in produits %}
+    <div class="category-row">
+      <div class="category-img-td">
+        {% if produit.photo %}
+          <img src="{{ produit.photo.url }}" alt="{{ produit.nom }}">
+        {% else %}
+          <img src="{% static 'app1/img/default_product.jpg' %}" alt="Produit par défaut">
+        {% endif %}
+      </div>
+      <div class="category-desc">
+        <div><strong>Nom :</strong> {{ produit.nom }}</div>
+        <div><strong>Catégorie :</strong> {{ produit.categorie.nom }}</div>
+        <div><strong>Date de péremption :</strong> {{ produit.date_peremption }}</div>
+        <div><strong>Marque :</strong> {{ produit.marque|default:"-" }}</div>
+        <div><strong>Prix :</strong> {{ produit.prix }} €</div>
+        <div><strong>ID :</strong> {{ produit.id }}</div>
+      </div>
+      <div class="category-actions">
+        <a href="{% url 'produit-update' produit.id %}" class="round-btn edit" title="Modifier">
+          <i class="fa-solid fa-pen"></i>
+        </a>
+        <a href="{% url 'produit-delete' produit.id %}" class="round-btn delete" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');">
+          <i class="fa-solid fa-trash"></i>
+        </a>
+      </div>
+    </div>
+    {% empty %}
+    <p>Aucun produit enregistré.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

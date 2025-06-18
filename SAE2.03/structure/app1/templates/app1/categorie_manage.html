@@ -1,0 +1,60 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Gérer les Catégories{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/clients.css' %}">
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'index' %}" class="btn-retour">Retour</a>
+  <div class="categories-title"><span class="title">Gérer les catégories : </span></div>
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'categorie-create' %}" class="btn-ajouter">+ Ajouter une catégorie</a>
+  </div>
+  <form class="search-bar" method="get" autocomplete="off">
+    <input type="text" name="q" placeholder="Chercher une catégorie par nom ou description..." value="{{ request.GET.q|default:'' }}">
+  </form>
+  <div class="category-table">
+    {% for categorie in categories %}
+    <div class="category-row">
+      <div class="category-img-td">
+        {% if categorie.image %}
+          <img src="{{ categorie.image.url }}" alt="{{ categorie.nom }}">
+        {% else %}
+          <img src="{% static 'app1/img/default.jpg' %}" alt="Catégorie par défaut">
+        {% endif %}
+      </div>
+      <div class="category-desc">
+        <div>
+          <strong>Nom :</strong><br>{{ categorie.nom }}
+        </div>
+        <div>
+          <strong>Description :</strong>
+          <div class="category-small-desc">{{ categorie.descriptif|default:"-" }}</div>
+        </div>
+        <div>
+          <strong>ID</strong><br>{{ categorie.id }}
+        </div>
+      </div>
+      <div class="category-actions">
+        <a href="{% url 'categorie-detail' categorie.id %}" class="round-btn view" title="Voir">
+          <i class="fa-solid fa-eye"></i>
+        </a>
+        <a href="{% url 'categorie-update' categorie.id %}" class="round-btn edit" title="Modifier">
+          <i class="fa-solid fa-pen"></i>
+        </a>
+        <form action="{% url 'categorie-delete' categorie.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="round-btn delete" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <p>Aucune catégorie enregistrée.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

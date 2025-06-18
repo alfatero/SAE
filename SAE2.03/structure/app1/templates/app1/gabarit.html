@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SAE 2.03 Drive{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="drive, boissons, produits frais, commande en ligne">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,italic&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'app1/footer.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="grid-wrapper">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-logo">
+          <i>SAE 2.03 Drive</i>
+        </span>
+        <span class="footer-legal">2025 Tous droits réservés</span>
+      </div>
+      <div class="footer-links">
+        <a href="{% url 'index' %}">Accueil</a>
+        <a href="{% url 'categorie-manage' %}">Catégories</a>
+        <a href="{% url 'produit-manage' %}">Produits</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

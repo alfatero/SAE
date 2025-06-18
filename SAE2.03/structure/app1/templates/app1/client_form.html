@@ -1,0 +1,22 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}{{ title }} un client{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/formulaire.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="edit-wrapper">
+    <a href="{% url 'client-list' %}" class="btn-retour">Retour</a>
+    <div class="edit-title">
+      <span>{{ title }} un client</span>
+    </div>
+    <form method="post" autocomplete="off">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn-publier">{{ submit_label }}</button>
+    </form>
+  </div>
+{% endblock %}

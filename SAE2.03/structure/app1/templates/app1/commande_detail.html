@@ -1,0 +1,27 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Détail commande #{{ commande.numero_commande }}{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/formulaire.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="edit-wrapper">
+    <div class="edit-title">Commande #{{ commande.numero_commande }}</div>
+    <div>
+      <b>Client :</b> {{ commande.client.prenom }} {{ commande.client.nom }}<br>
+      <b>Date :</b> {{ commande.date|date:"d/m/Y H:i" }}<br>
+      <b>Total :</b> {{ commande.cout_total|floatformat:2 }}€
+    </div>
+    <ul style="margin-top:18px;">
+      {% for ligne in commande.lignes.all %}
+        <li>
+          {{ ligne.produit.nom }} — x{{ ligne.quantite }} — {{ ligne.produit.prix|floatformat:2 }}€/prod
+        </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'commande-list' %}" class="btn-retour">Retour</a>
+  </div>
+{% endblock %}

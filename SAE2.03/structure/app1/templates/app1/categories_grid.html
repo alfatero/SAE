@@ -1,0 +1,34 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Catégories{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/categories_grid.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="categories-header">
+    <div class="categories-title"><span class="title">CATEGORIES</span> :</div>
+    <div class="header-btns">
+      <a href="{% url 'categorie-manage' %}" class="header-btn">Gérer les Catégories</a>
+      <a href="{% url 'produit-manage' %}" class="header-btn">Gérer tous les produits</a>
+    </div>
+  </div>
+  <div class="categories-grid">
+    {% for categorie in categories %}
+      <a href="{% url 'categorie-detail' categorie.id %}" class="category-cell">
+        <div class="category-img">
+          {% if categorie.image %}
+            <img src="{{ categorie.image.url }}" alt="{{ categorie.nom }}">
+          {% else %}
+            <img src="{% static 'app1/img/default_category.jpg' %}" alt="{{ categorie.nom }}">
+          {% endif %}
+        </div>
+        <div class="category-name">{{ categorie.nom }}</div>
+      </a>
+    {% empty %}
+      <div style="color:#888;font-style:italic;">Aucune catégorie pour le moment.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

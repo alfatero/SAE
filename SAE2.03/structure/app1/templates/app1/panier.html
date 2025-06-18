@@ -1,0 +1,85 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/panier.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="panier-banner">
+    <a href="{% url 'categorie-grid' %}" class="banner-btn retour-btn">
+      &#8592; Retour
+    </a>
+    <span class="panier-title">Mon panier</span>
+    <span></span>
+  </div>
+  <div class="edit-wrapper">
+    {% if panier_items %}
+      <table class="panier-table">
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Visuel</th>
+            <th>Prix Unité</th>
+            <th>Quantité</th>
+            <th>Total</th>
+            <th>Supprimer</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in panier_items %}
+          <tr>
+            <td><strong>{{ item.produit.nom }}</strong></td>
+            <td>
+              <img src="{% if item.produit.photo %}{{ item.produit.photo.url }}{% else %}{% static 'app1/img/default.jpg' %}{% endif %}" alt="{{ item.produit.nom }}" class="panier-img">
+            </td>
+            <td>{{ item.produit.prix|floatformat:2 }} €</td>
+            <td>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="produit_id" value="{{ item.produit.id }}">
+                <button name="action" value="moins" type="submit" class="qt-btn">-</button>
+              </form>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="produit_id" value="{{ item.produit.id }}">
+                <input type="number" name="quantite" value="{{ item.quantite }}" min="1" onchange="this.form.submit()" class="qt-input">
+                <input type="hidden" name="action" value="set">
+              </form>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="produit_id" value="{{ item.produit.id }}">
+                <button name="action" value="plus" type="submit" class="qt-btn">+</button>
+              </form>
+            </td>
+            <td>{{ item.total|floatformat:2 }} €</td>
+            <td>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="produit_id" value="{{ item.produit.id }}">
+                <button name="action" value="remove" type="submit" class="rm-btn" title="Retirer du panier">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="text-align:right;"><b>Total :</b></td>
+            <td colspan="2"><b>{{ total_panier|floatformat:2 }} €</b></td>
+          </tr>
+        </tfoot>
+      </table>
+      <form method="post" style="margin-top:18px;">
+        {% csrf_token %}
+        <button name="valider" type="submit" class="banner-btn valider-btn">Valider le panier</button>
+      </form>
+    {% else %}
+      <div class="empty-panier">Votre panier est vide.</div>
+    {% endif %}
+  </div>
+{% endblock %}

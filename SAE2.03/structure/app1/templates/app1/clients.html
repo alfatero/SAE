@@ -1,0 +1,58 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Gérer les Clients{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/clients.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'index' %}" class="btn-retour">Retour</a>
+  <div class="categories-title"><span class="title">Gérer les clients :</span></div>
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'client-create' %}" class="btn-ajouter">+ Ajouter un client</a>
+  </div>
+  <form class="search-bar" method="get" autocomplete="off">
+    <input type="text" name="q" placeholder="Chercher un client par nom, prénom, email..." value="{{ request.GET.q|default:'' }}">
+  </form>
+  <div class="category-table">
+    {% for client in clients %}
+    <div class="category-row">
+      <div class="category-img-td">
+        <img src="{% static 'app1/img/default.jpg' %}" alt="Client Avatar"/>
+      </div>
+      <div class="category-desc">
+        <div><strong>Nom :</strong><br>{{ client.nom }}</div>
+        <div><strong>Prénom :</strong><br>{{ client.prenom }}</div>
+        <div><strong>Email :</strong><br>{{ client.email }}</div>
+        <div>
+          <strong>Adresse :</strong>
+          <div class="category-small-desc">{{ client.adresse|linebreaksbr }}</div>
+        </div>
+        <div>
+          <strong>Inscription</strong><br>{{ client.date_inscription|date:"d/m/Y" }}
+        </div>
+        <div>
+          <strong>ID</strong><br>{{ client.numero_client }}
+        </div>
+      </div>
+      <div class="category-actions">
+        <a href="{% url 'client-update' client.numero_client %}" class="round-btn edit" title="Modifier">
+          <i class="fa-solid fa-pen"></i>
+        </a>
+
+        <form action="{% url 'client-delete' client.numero_client %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="round-btn delete" title="Supprimer" onclick="return confirm('Confirmer la suppression ?');">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <p>Aucun client enregistré.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

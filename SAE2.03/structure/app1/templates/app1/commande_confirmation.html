@@ -1,0 +1,42 @@
+{% extends "app1/gabarit.html" %}
+{% load static %}
+
+{% block title %}Commande confirmée{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'app1/validation.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="recap-wrapper">
+    <div class="recap-title">
+      &#10003; <span style="font-style: italic;">Commande <b>#{{ commande.numero_commande }}</b> confirmée</span>
+    </div>
+    <div class="recap-info recap-client" style="margin-bottom:28px;">
+      <div><b>Client :</b> {{ commande.client.prenom }} {{ commande.client.nom }}</div>
+      <div><b>Email :</b> {{ commande.client.email }}</div>
+      <div><b>Date d'inscription :</b> {{ commande.client.date_inscription|date:"d/m/Y" }}</div>
+      <div><b>Adresse :</b> {{ commande.client.adresse|linebreaksbr }}</div>
+      <div><b>Date commande :</b> {{ commande.date|date:"d/m/Y H:i" }}</div>
+      <div><b>Total :</b> {{ commande.cout_total|floatformat:2 }} €</div>
+    </div>
+    <ul class="recap-list" style="margin-bottom:24px;">
+      {% for ligne in commande.lignes.all %}
+      <li class="recap-item">
+        <img class="recap-img"
+             src="{% if ligne.produit.photo %}{{ ligne.produit.photo.url }}{% else %}{% static 'app1/img/default.jpg' %}{% endif %}"
+             alt="{{ ligne.produit.nom }}">
+        <div class="recap-info">
+          <div class="recap-nom">{{ ligne.produit.nom }}</div>
+          <div>
+            <span class="recap-qt">Qté : {{ ligne.quantite }}</span>
+            &nbsp;|&nbsp;
+            <span class="recap-euro">{{ ligne.produit.prix|floatformat:2 }} € / produit</span>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'commande-list' %}" class="valider-btn recap-btn">Voir les commandes</a>
+  </div>
+{% endblock %}
