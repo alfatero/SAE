@@ -40,10 +40,6 @@ class Commande(models.Model):
     def __str__(self):
         return f"Commande #{self.numero_commande}"
 
-    def cout_total(self):
-        # renvoie le coût total de la commande
-        return sum([ligne.produit.prix * ligne.quantite for ligne in self.lignes.all()])
-
 class LigneCommande(models.Model):
     commande = models.ForeignKey(Commande, related_name='lignes', on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
