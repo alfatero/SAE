@@ -1,6 +1,3 @@
-/* detail-page.css */
-
-/* --- Variables Globales --- */
 :root {
     --color-gradient-green: linear-gradient(135deg, #14603a 0%, #168d54 100%);
     --color-gradient-green-hover: linear-gradient(135deg, #136338 12%, #23b771 90%);
@@ -13,12 +10,11 @@
     --color-label: #232323;
     --radius-field: 13px;
     --radius-btn: 12px;
-    --max-content-width: 540px; /* Largeur maximale pour le contenu central */
+    --max-content-width: 540px;
     --side-padding: 16px;
     --main-padding-top: 90px;
 }
 
-/* --- Styles de Base --- */
 body, html {
     background: var(--color-background);
     color: #232323;
@@ -28,7 +24,6 @@ body, html {
     padding: 0;
 }
 
-/* --- Wrapper Général pour les Pages de Détails (Produit, Client, etc.) --- */
 .detail-page-wrapper {
     box-sizing: border-box;
     max-width: var(--max-content-width);
@@ -36,7 +31,6 @@ body, html {
     padding: var(--main-padding-top) var(--side-padding) 36px var(--side-padding);
 }
 
-/* --- Titre Général (H1) pour les Pages de Détails --- */
 .detail-page-wrapper h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-style: italic;
@@ -49,7 +43,6 @@ body, html {
     text-align: center;
 }
 
-/* --- Style Générique pour les Listes de Détails (UL) --- */
 .detail-list {
     list-style-type: none;
     padding: 0;
@@ -60,7 +53,6 @@ body, html {
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* --- Style Générique pour les Éléments de Liste de Détails (LI) --- */
 .detail-list li {
     margin-bottom: 12px;
     font-size: 1.09rem;
@@ -71,17 +63,17 @@ body, html {
     margin-bottom: 0;
 }
 
-/* --- Style Générique pour les Labels Forts dans les Listes de Détails (STRONG) --- */
+
 .detail-list li strong {
     font-weight: 600;
     color: #313131;
     margin-right: 5px;
 }
 
-/* --- Bouton de Retour (Générique) --- */
+
 .btn-retour {
-    display: block; /* Pour centrer avec margin auto */
-    margin: 0 auto 28px auto; /* Centre le bouton horizontalement */
+    display: block; 
+    margin: 0 auto 28px auto; 
     background: var(--color-gradient-blue);
     color: #fff;
     border: none;
@@ -95,34 +87,32 @@ body, html {
     box-shadow: none;
     transition: background 0.15s, transform 0.07s;
     text-align: center;
-    width: fit-content; /* Prend la largeur de son contenu */
+    width: fit-content; 
 }
 .btn-retour:hover {
     background: var(--color-gradient-blue-hover);
     transform: scale(1.04);
 }
 
-/* --- Styles Spécifiques aux Détails Produit (Image) --- */
-/* Ces styles ne seront appliqués que si .produit-detail-img est présent */
 .produit-detail-img {
-    text-align: center; /* Centre l'image */
+    text-align: center; 
     margin-bottom: 30px;
-    background: var(--color-field); /* Fond léger derrière l'image */
+    background: var(--color-field); 
     border-radius: var(--radius-field);
-    padding: 15px; /* Petit padding autour de l'image */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Ombre légère */
+    padding: 15px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
 }
 
 .produit-detail-img img {
-    max-width: 100%; /* S'assure que l'image ne dépasse pas son conteneur */
-    height: auto; /* Maintient le ratio d'aspect */
-    border-radius: var(--radius-field); /* Rayon des coins similaire aux champs de formulaire */
-    display: block; /* Supprime l'espace sous l'image si elle est inline par défaut */
-    margin: 0 auto; /* Centre l'image si elle est plus petite que son conteneur */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Ombre légère pour la photo */
+    max-width: 100%; 
+    height: auto; 
+    border-radius: var(--radius-field); 
+    display: block; 
+    margin: 0 auto; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
 }
 
-/* --- Responsive pour les Petits Écrans --- */
+
 @media (max-width: 700px) {
     .detail-page-wrapper {
         max-width: 98vw;
@@ -151,6 +141,6 @@ body, html {
     .btn-retour {
         font-size: 1rem;
         padding: 12px 12vw;
-        width: 100%; /* Le bouton prend toute la largeur sur mobile */
+        width: 100%; 
     }
 }
