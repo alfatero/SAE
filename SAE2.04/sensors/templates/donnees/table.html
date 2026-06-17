@@ -1,0 +1,38 @@
+{% load static %}
+{% load django_tables2 %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Données capteurs</title>
+
+    {# — rafraîchissement automatique — #}
+    <meta http-equiv="refresh" content="{{ request.GET.refresh|default:10 }}" />
+
+    <link rel="stylesheet"
+          href="{% static 'css/sae24web.css' %}">
+</head>
+<body>
+    <h1>Données capteurs</h1>
+
+    {# — nouveau : choix du délai de rafraîchissement — #}
+    <form method="get" style="margin-bottom:1rem;">
+        <label for="refresh">Rafraîchissement automatique&nbsp;(s)&nbsp;:</label>
+        <input type="number" id="refresh" name="refresh"
+               min="1" value="{{ request.GET.refresh|default:10 }}">
+        <button type="submit">Changer</button>
+    </form>
+
+    {# — formulaire de filtre existant — #}
+    <form method="get">
+        {{ filter.form.as_p }}
+        <button type="submit">Filtrer</button>
+    </form>
+
+    {% render_table table %}
+</body>
+</html>
+
+
+
+

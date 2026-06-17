@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Température – capteur {{ capteur_id }}</title>
+  <link rel="stylesheet"
+          href="{% static 'css/sae24web.css' %}">
+
+  <!-- Chart.js + adaptateur date-fns -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
+
+  <style>
+    body { font-family: sans-serif; margin: 1rem; }
+    h1  { margin-bottom: .5rem; }
+    canvas { max-width: 100%; height: 320px; }
+  </style>
+</head>
+
+<body>
+  <h1>Température – {{ capteur_id }}</h1>
+
+  {# ───── nouveau : choix du délai de rafraîchissement ───── #}
+  <form method="get" style="margin-bottom:.5rem;">
+      <label for="refresh">Rafraîchissement (s)&nbsp;:</label>
+      <input type="number" id="refresh" name="refresh"
+             min="1" value="{{ request.GET.refresh|default:5 }}">
+      <button type="submit">Changer</button>
+  </form>
+
+  <canvas id="chart"></canvas>
+
+  <script defer>
+  (function () {
+    const url        = "{% url 'serie_json' capteur_id %}";
+    const REFRESH_MS = ({{ request.GET.refresh|default:"5" }}) * 1000;   // ← valeur choisie
+    let   chart      = null;
+
+    function draw () {
+      fetch(url)
+        .then(r => r.json())
+        .then(d => {
+          /* points [{x: ISODate, y: nombre}, …] */
+          const pts = d.labels.map((ts, i) => ({ x: ts, y: d.values[i] }));
+
+          /* mise à jour si le graphe existe déjà */
+          if (chart) {
+            chart.data.datasets[0].data = pts;
+            chart.update();
+            return;
+          }
+
+          /* création initiale */
+          chart = new Chart(
+            document.getElementById('chart'),
+            {
+              type: 'line',
+              data: {
+                datasets: [{
+                  label: 'Température (°C)',
+                  data: pts,
+                  borderColor: '#007bff',
+                  backgroundColor: '#007bff',
+                  borderWidth: 2,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  tension: 0.25       /* courbe lissée */
+                }]
+              },
+              options: {
+                scales: {
+                  x: {
+                    type: 'time',
+                    time: { unit: 'minute' },
+                    title: { display: true, text: 'Heure' }
+                  },
+                  y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Température (°C)' }
+                  }
+                },
+                plugins: {
+                  legend:  { display: true },
+                  tooltip: { intersect: false }
+                }
+              }
+            }
+          );
+        })
+        .catch(err => console.error('Erreur JS :', err));
+    }
+
+    draw();                    // affichage initial
+    setInterval(draw, REFRESH_MS);   // rafraîchissement périodique
+  })();
+  </script>
+</body>
+</html>
+
+

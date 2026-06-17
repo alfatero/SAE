@@ -1,0 +1,16 @@
+<!DOCTYPE html><html>
+<head>
+  <meta charset="utf-8" />
+  <title>Modifier capteur {{ object.id }}</title>
+  <link rel="stylesheet"
+          href="{% static 'css/sae24web.css' %}">
+</head>
+<body>
+  <h1>Modifier capteur {{ object.id }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>Enregistrer</button>
+  </form>
+</body>
+</html>
